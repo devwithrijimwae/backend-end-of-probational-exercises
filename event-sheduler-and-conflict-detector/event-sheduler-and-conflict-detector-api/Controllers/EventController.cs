@@ -7,5 +7,11 @@ namespace event_sheduler_and_conflict_detector_api.Controllers
     [ApiController]
     public class EventController : ControllerBase
     {
+        private readonly ApplicationDbContext _context;
+
+        public EventController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
     }
 }

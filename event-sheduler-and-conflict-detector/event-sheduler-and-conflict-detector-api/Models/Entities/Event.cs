@@ -7,7 +7,7 @@
         public required string Description { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        public required string Location { get; set;
+        public required string Location { get; set; }
         public required string Attendees  { get; set; }
         public string? EventType  { get; set; }
 
