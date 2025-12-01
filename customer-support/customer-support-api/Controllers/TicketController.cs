@@ -31,9 +31,9 @@ namespace customer_support_api.Controllers
         }
         [HttpGet]
         [Route("{Id:int}")]
-        public async Task<ActionResult<List<Ticket>>> GetTicket(int Id, Ticket ticket)
+        public async Task<ActionResult<List<Ticket>>> GetTicket(int Id)
         {
-            var Ticket = await _context.Tickets.FindAsync();
+            var Ticket = await _context.Tickets.FindAsync(Id);
             if (Ticket == null)
                 return NotFound();
             return Ok(Ticket);
@@ -46,6 +46,37 @@ namespace customer_support_api.Controllers
 
 
             return Ok(await _context.Tickets.ToListAsync());
+        }
+        [HttpPut]
+        [Route("{Id:int}")]
+        public async Task<ActionResult<List<Ticket>>> UpdateTicketAsync(int Id, [FromBody] Ticket updateticket)
+        {
+            var Ticket = await _context.Tickets.FindAsync(Id);
+            if (Ticket == null)
+                return NotFound();
+
+            updateticket.Subject = updateticket.Subject;
+            updateticket.Description = updateticket.Description;
+            updateticket.CreatedAt = updateticket.CreatedAt;
+
+
+            await _context.DeleteticketAsyc(updateticket);
+            _context.SaveChanges();
+
+
+            return Ok(await _context.Tickets.ToListAsync());
+        }
+        [HttpDelete]
+        public async Task<ActionResult<List<Ticket>>> DeleteTicketAsync(int Id, [FromBody] Ticket deleteticket)
+        {
+            var Ticket = await _context.Tickets.FindAsync(Id);
+
+
+            await _context.DeleteticketAsyc(deleteticket);
+            _context.SaveChanges();
+
+
+            return Ok(await _context.Tickets.FindAsync());
         }
     }
 }
