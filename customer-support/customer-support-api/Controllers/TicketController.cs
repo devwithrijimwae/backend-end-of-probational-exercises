@@ -8,6 +8,7 @@ using customer_support_api.Models.Entities;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace customer_support_api.Controllers
 {
@@ -32,9 +33,19 @@ namespace customer_support_api.Controllers
         [Route("{Id:int}")]
         public async Task<ActionResult<List<Ticket>>> GetTicket(int Id, Ticket ticket)
         {
-            var Ticket = await _context.Tickets.FindAsync(Id);
-
+            var Ticket = await _context.Tickets.FindAsync();
+            if (Ticket == null)
+                return NotFound();
             return Ok(Ticket);
+        }
+        [HttpPost]
+        public async Task<ActionResult<List<Ticket>>> AddTicketAsync(Ticket ticket)
+        {
+            await _context.AddAsync(ticket);
+            _context.SaveChanges();
+
+
+            return Ok(await _context.Tickets.ToListAsync());
         }
     }
 }
