@@ -36,12 +36,22 @@ namespace customer_support_api.Controllers
             var Ticket = await _context.Tickets.FindAsync(Id);
             if (Ticket == null)
                 return NotFound();
+
             return Ok(Ticket);
         }
         [HttpPost]
-        public async Task<ActionResult<List<Ticket>>> AddTicketAsync(Ticket ticket)
+        public async Task<ActionResult<List<Ticket>>> AddTicketAsync(Ticket addticket)
         {
-            await _context.AddAsync(ticket);
+            var Ticket = await _context.Tickets.ToListAsync();
+            if (Ticket == null)
+                return NotFound();
+
+            addticket.Subject = addticket.Subject;
+            addticket.Description = addticket.Description;
+            addticket.CreatedAt = addticket.CreatedAt;
+            addticket.Status = addticket.Status;
+
+            await _context.AddAsync(addticket);
             _context.SaveChanges();
 
 
@@ -58,21 +68,22 @@ namespace customer_support_api.Controllers
             updateticket.Subject = updateticket.Subject;
             updateticket.Description = updateticket.Description;
             updateticket.CreatedAt = updateticket.CreatedAt;
+            updateticket.Status = updateticket.Status;
 
 
-            await _context.DeleteticketAsyc(updateticket);
+            await _context.UpdateAsync(updateticket);
             _context.SaveChanges();
 
 
             return Ok(await _context.Tickets.ToListAsync());
         }
         [HttpDelete]
-        public async Task<ActionResult<List<Ticket>>> DeleteTicketAsync(int Id, [FromBody] Ticket deleteticket)
+        public async Task<ActionResult<List<Ticket>>> DeleteTicketAsync()
         {
-            var Ticket = await _context.Tickets.FindAsync(Id);
+            var Ticket = await _context.Tickets.FindAsync();
 
 
-            await _context.DeleteticketAsyc(deleteticket);
+            await _context.RemoveAsync(Ticket);
             _context.SaveChanges();
 
 
