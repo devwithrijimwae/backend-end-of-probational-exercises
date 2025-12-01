@@ -1,6 +1,6 @@
 ﻿namespace event_sheduler_and_conflict_detector_api
 {
-    public class UpdateEvent
+    public class UpdateEventDto
     {
         public required string Title { get; set; }
         public required string Description { get; set; }
